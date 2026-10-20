@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OUTBOUND SIMULATOR 3000</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080318;
+      --panel-bg: #110926;
+      --panel-inner: #0a041a;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff007f;
+      --neon-green: #39ff14;
+      --neon-amber: #ffb703;
+      --text: #f8fafc;
+      --text-muted: #a5a0c2;
+      
+      /* Base Elements & Box Glows */
+      --glow-pink-box: 0 0 14px rgba(255, 0, 127, 0.45), 0 0 28px rgba(255, 0, 127, 0.2);
+      --glow-cyan-box: 0 0 14px rgba(0, 240, 255, 0.45), 0 0 28px rgba(0, 240, 255, 0.2);
+      --glow-green-box: 0 0 14px rgba(57, 255, 20, 0.45), 0 0 28px rgba(57, 255, 20, 0.2);
+      
+      /* Standard Text Shadows */
+      --glow-text-cyan: 0 0 3px rgba(0, 240, 255, 0.35);
+      --glow-text-green: 0 0 3px rgba(57, 255, 20, 0.35);
+      --glow-text-pink: 0 0 3px rgba(255, 0, 127, 0.35);
+      --glow-text-amber: 0 0 3px rgba(255, 183, 3, 0.35);
+
+      /* Headings & Labels */
+      --glow-boosted-cyan: 0 0 6px rgba(0, 240, 255, 0.65), 0 0 14px rgba(0, 240, 255, 0.35);
+      --glow-boosted-amber: 0 0 6px rgba(255, 183, 3, 0.65), 0 0 14px rgba(255, 183, 3, 0.35);
+
+      /* Category Subheads (-20% Glow) */
+      --glow-subhead-cyan: 0 0 5px rgba(0, 240, 255, 0.52), 0 0 11px rgba(0, 240, 255, 0.28);
+
+      /* Hero Numbers (-10% Glow) */
+      --glow-hero-cyan: 0 0 7px rgba(0, 240, 255, 0.63), 0 0 16px rgba(0, 240, 255, 0.36);
+      --glow-hero-green: 0 0 7px rgba(57, 255, 20, 0.63), 0 0 16px rgba(57, 255, 20, 0.36);
+    }
+
+    * { 
+      box-sizing: border-box; 
+      text-transform: uppercase;
+    }
+
+    body {
+      font-family: 'Chakra Petch', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 28px 18px;
+      display: flex;
+      justify-content: center;
+      line-height: 1.5;
+      font-size: 1.12rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Softened Scanline Overlay */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%);
+      background-size: 100% 2px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .wrapper {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      border: 2px solid var(--neon-cyan);
+      background: #060114;
+      padding: 28px 20px 24px 20px;
+      border-radius: 8px;
+      box-shadow: var(--glow-cyan-box);
+      position: relative;
+    }
+
+    /* Pulsating Title */
+    @keyframes pulseTitle {
+      0%, 100% {
+        text-shadow: 0 0 12px rgba(255, 0, 127, 0.5), 0 0 24px rgba(255, 0, 127, 0.25);
+        transform: scale(1);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(255, 0, 127, 0.9), 0 0 36px rgba(255, 0, 127, 0.6), 0 0 50px rgba(255, 0, 127, 0.35);
+        transform: scale(1.015);
+      }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--neon-pink);
+      margin: 0 0 6px 0;
+      letter-spacing: 2px;
+      animation: pulseTitle 2.8s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .creator-tag {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      margin: 0;
+    }
+
+    .creator-name {
+      color: var(--neon-cyan);
+      font-weight: 700;
+    }
+
+    /* About Button */
+    .about-btn {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+    }
+
+    .about-btn:hover {
+      background: rgba(0, 240, 255, 0.15);
+      box-shadow: var(--glow-cyan-box);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 22px;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 0, 127, 0.45);
+      border-radius: 8px;
+      box-shadow: var(--glow-pink-box);
+      padding: 24px;
+    }
+
+    .panel.cyan-panel {
+      border-color: rgba(0, 240, 255, 0.45);
+      box-shadow: var(--glow-cyan-box);
+    }
+
+    .panel.green-panel {
+      border-color: rgba(57, 255, 20, 0.45);
+      box-shadow: var(--glow-green-box);
+    }
+
+    .panel.amber-panel {
+      border-color: rgba(255, 183, 3, 0.45);
+      box-shadow: 0 0 14px rgba(255, 183, 3, 0.35);
+    }
+
+    /* Section Headings */
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-boosted-cyan);
+      margin: 0 0 18px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(0, 240, 255, 0.35);
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Sub-Headers with -20% Glow */
+    .category-subhead {
+      margin-top: 12px;
+      margin-bottom: 8px;
+      color: var(--neon-cyan);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-shadow: var(--glow-subhead-cyan);
+      letter-spacing: 0.5px;
+    }
+
+    /* Controls */
+    .control-row {
+      margin-bottom: 16px;
+    }
+    .control-row:last-child { margin-bottom: 0; }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.02rem;
+      margin-bottom: 5px;
+    }
+
+    .control-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .badge {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--neon-green);
+      text-shadow: var(--glow-text-green);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: var(--panel-inner);
+      height: 9px;
+      border: 1px solid var(--neon-cyan);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--neon-pink);
+      border: 1px solid #fff;
+      cursor: pointer;
+      box-shadow: var(--glow-pink-box);
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: var(--neon-pink);
+      border: 1px solid #fff;
+      cursor: pointer;
+      box-shadow: var(--glow-pink-box);
+    }
+
+    .mini-controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* Output Tables */
+    .retro-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1.05rem;
+    }
+
+    .retro-table tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+    .retro-table tr:last-child { border-bottom: none; }
+
+    .retro-table td {
+      padding: 9px 0;
+      color: var(--text-muted);
+    }
+
+    .retro-table td:last-child {
+      text-align: right;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .val-cyan { color: var(--neon-cyan) !important; text-shadow: var(--glow-text-cyan); }
+    .val-green { color: var(--neon-green) !important; text-shadow: var(--glow-text-green); }
+    .val-pink { color: var(--neon-pink) !important; text-shadow: var(--glow-text-pink); }
+    .val-amber { color: var(--neon-amber) !important; text-shadow: var(--glow-text-amber); }
+
+    /* Hero Metrics in Expected Workload */
+    .hero-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 680px) {
+      .hero-metrics-grid { grid-template-columns: 1fr; }
+    }
+
+    .hero-stat-card {
+      background: #060114;
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.3);
+      border-radius: 8px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .hero-stat-card.green-card {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 18px rgba(57, 255, 20, 0.3);
+    }
+
+    .hero-stat-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--neon-amber);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-shadow: var(--glow-boosted-amber);
+    }
+
+    /* Numbers below hero labels (-10% Glow) */
+    .hero-stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-hero-cyan);
+    }
+
+    .hero-stat-card.green-card .hero-stat-value {
+      color: var(--neon-green);
+      text-shadow: var(--glow-hero-green);
+    }
+
+    .hero-stat-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Commission Modules */
+    .toggle-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      background: var(--panel-inner);
+      padding: 5px;
+      border: 1px solid rgba(255, 183, 3, 0.3);
+      border-radius: 6px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.88rem;
+      padding: 9px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn.active {
+      background: var(--neon-amber);
+      color: #000;
+      font-weight: 900;
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.5);
+    }
+
+    .commission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .comm-metric-box {
+      background: var(--panel-inner);
+      border: 1px solid rgba(255, 183, 3, 0.25);
+      border-radius: 6px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .comm-metric-box .label {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .comm-metric-box .value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      color: var(--neon-amber);
+      font-weight: 700;
+      text-shadow: 0 0 4px rgba(255, 183, 3, 0.3);
+    }
+
+    /* Attainment Boxes */
+    .attainment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .target-box {
+      background: var(--panel-inner);
+      border: 1px solid var(--neon-cyan);
+      padding: 18px;
+      border-radius: 6px;
+    }
+
+    .target-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.88rem;
+      color: var(--neon-amber);
+      margin-bottom: 8px;
+    }
+
+    .stat-hero {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.55rem;
+      color: var(--neon-pink);
+      text-shadow: 0 0 5px rgba(255, 0, 127, 0.35);
+      margin-bottom: 4px;
+    }
+
+    .subtext {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+    }
+
+    .status-badge {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .status-green { background: #003811; color: var(--neon-green); border: 1px solid var(--neon-green); }
+    .status-yellow { background: #3b2800; color: var(--neon-amber); border: 1px solid var(--neon-amber); }
+    .status-red { background: #400010; color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+
+    /* Modal Popup */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 1, 14, 0.88);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-window {
+      background: #0f0724;
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+      border-radius: 8px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px 30px;
+      position: relative;
+      color: var(--text);
+    }
+
+    .modal-window h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-cyan);
+      margin: 0 0 16px 0;
+      font-size: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: 1px solid var(--neon-pink);
+      color: var(--neon-pink);
+      font-family: 'Orbitron', sans-serif;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(255, 0, 127, 0.2);
+    }
+
+    .feedback-banner {
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      font-size: 1.05rem;
+      color: #fff;
+    }
+
+    .feedback-banner span {
+      color: var(--neon-green);
+      font-weight: 700;
+    }
+
+    .simple-guide-item {
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+    .simple-guide-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .simple-guide-item h4 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      color: var(--neon-amber);
+      margin: 0 0 6px 0;
+    }
+
+    .simple-guide-item p {
+      margin: 0;
+      font-size: 1.02rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- HEADER -->
+  <header>
+    <button class="about-btn" onclick="openModal()">ABOUT / LOGIC</button>
+    <h1>&#x26A1; OUTBOUND SIMULATOR 3000 &#x26A1;</h1>
+    <div class="creator-tag">BY <span class="creator-name">ERDEM ADIGÜZEL</span></div>
+  </header>
+
+  <!-- ROW 1: CADENCE & CONVERSION RATES -->
+  <div class="grid-2">
+    <!-- PANEL 1: CADENCE -->
+    <div class="panel">
+      <h2>// 1. CADENCE</h2>
+
+      <div class="mini-controls-grid">
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">ACCOUNTS / WEEK:</span>
+            <span class="badge" id="accPerWeekVal">10</span>
+          </div>
+          <input type="range" id="accPerWeek" min="1" max="30" step="1" value="10">
+        </div>
+
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">PROSPECTS / ACCOUNT:</span>
+            <span class="badge" id="prosPerAccVal">4</span>
+          </div>
+          <input type="range" id="prosPerAcc" min="1" max="10" step="1" value="4">
+        </div>
+      </div>
+
+      <div class="mini-controls-grid">
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">CADENCE LENGTH:</span>
+            <span class="badge" id="cadenceWeeksVal">4 WKS</span>
+          </div>
+          <input type="range" id="cadenceWeeks" min="1" max="8" step="1" value="4">
+        </div>
+
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">MID-SEQUENCE DROP-OUT:</span>
+            <span class="badge" id="dropOutRateVal">10.0%</span>
+          </div>
+          <input type="range" id="dropOutRate" min="0" max="30" step="1" value="10">
+        </div>
+      </div>
+
+      <div class="category-subhead">
+        TOUCHPOINTS PER PROSPECT (OVER CADENCE):
+      </div>
+
+      <div class="control-row">
+        <div class="control-header">
+          <span class="control-label">CALL TOUCHES:</span>
+          <span class="badge" id="callTouchesVal">4</span>
+        </div>
+        <input type="range" id="callTouches" min="1" max="10" step="1" value="4">
+      </div>
+
+      <div class="control-row">
+        <div class="control-header">
+          <span class="control-label">EMAIL TOUCHES:</span>
+          <span class="badge" id="emailTouchesVal">4</span>
+        </div>
+        <input type="range" id="emailTouches" min="1" max="10" step="1" value="4">
+      </div>
+
+      <div class="control-row">
+        <div class="control-header">
+          <span class="control-label">LINKEDIN TOUCHES:</span>
+          <span class="badge" id="liTouchesVal">3</span>
+        </div>
+        <input type="range" id="liTouches" min="1" max="10" step="1" value="3">
+      </div>
+    </div>
+
+    <!-- PANEL 2: CONVERSION RATES -->
+    <div class="panel cyan-panel">
+      <h2>// 2. CONVERSION RATES</h2>
+
+      <div class="control-row">
+        <div class="control-header">
+          <span class="control-label">DAILY CALLING TIME:</span>
+          <span class="badge" id="callMinsVal">90 MIN</span>
+        </div>
+        <input type="range" id="callMins" min="30" max="180" step="5" value="90">
+      </div>
+
+      <div class="mini-controls-grid">
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">AVG TIME / CONNECT:</span>
+            <span class="badge" id="avgConnectTimeVal">10.0 MIN</span>
+          </div>
+          <input type="range" id="avgConnectTime" min="3" max="20" step="0.5" value="10.0">
+        </div>
+
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">AVG RING / NO-CONNECT:</span>
+            <span class="badge" id="avgNoConnectTimeVal">1.0 MIN</span>
+          </div>
+          <input type="range" id="avgNoConnectTime" min="0.5" max="3" step="0.1" value="1.0">
+        </div>
+      </div>
+
+      <div class="mini-controls-grid">
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">CONNECT RATE (%):</span>
+            <span class="badge" id="connectRateVal">10.0%</span>
+          </div>
+          <input type="range" id="connectRate" min="2" max="25" step="0.5" value="10.0">
+        </div>
+
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">CONNECT &rarr; SQL (%):</span>
+            <span class="badge" id="convRateVal">5.0%</span>
+          </div>
+          <input type="range" id="convRate" min="1" max="15" step="0.5" value="5.0">
+        </div>
+      </div>
+
+      <div class="category-subhead">
+        SQL SOURCE CONTRIBUTION SHARE:
+      </div>
+
+      <div class="mini-controls-grid">
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">EMAIL SHARE (%):</span>
+            <span class="badge" id="emailPctVal">10.0%</span>
+          </div>
+          <input type="range" id="emailPct" min="0" max="30" step="1" value="10.0">
+        </div>
+
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label">LINKEDIN SHARE (%):</span>
+            <span class="badge" id="liPctVal">10.0%</span>
+          </div>
+          <input type="range" id="liPct" min="0" max="30" step="1" value="10.0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: EXPECTED WORKLOAD -->
+  <div class="panel">
+    <h2>// 3. EXPECTED WORKLOAD</h2>
+
+    <!-- PROMINENT HERO METRICS (Numbers tuned with -10% Glow) -->
+    <div class="hero-metrics-grid">
+      <div class="hero-stat-card">
+        <div class="hero-stat-label">DAILY DIAL CAPACITY (FROM CALL TIME)</div>
+        <div class="hero-stat-value" id="dailyCapacityHero">47.4</div>
+        <div class="hero-stat-sub">RAW DIALS / DAY AT CURRENT ALLOCATION</div>
+      </div>
+
+      <div class="hero-stat-card green-card">
+        <div class="hero-stat-label">DAILY CONNECTS EXPECTED</div>
+        <div class="hero-stat-value" id="dailyConnectsHero">4.7</div>
+        <div class="hero-stat-sub">LIVE PROSPECT CONVERSATIONS / DAY</div>
+      </div>
+    </div>
+
+    <!-- WORKLOAD DETAILS -->
+    <div class="grid-2">
+      <table class="retro-table">
+        <tr>
+          <td>ACTIVE IN-CADENCE ACCOUNTS:</td>
+          <td id="activeAccounts" class="val-cyan">40 ACCOUNTS</td>
+        </tr>
+        <tr>
+          <td>ACTIVE IN-CADENCE PROSPECTS:</td>
+          <td id="activeProspects" class="val-cyan">152 PROSPECTS</td>
+        </tr>
+        <tr>
+          <td>WEEKLY NEW CONTACTS ADDED:</td>
+          <td id="weeklyContacts">40 CONTACTS</td>
+        </tr>
+        <tr>
+          <td>DAILY SCHEDULED PEOPLE (TO CALL):</td>
+          <td id="dailyScheduledCalls" class="val-pink">30.4 PEOPLE/DAY</td>
+        </tr>
+      </table>
+
+      <table class="retro-table">
+        <tr>
+          <td>DAILY SCHEDULED EMAILS / LINKEDIN:</td>
+          <td id="dailyScheduledDigital">30.4 MAILS | 22.8 LI</td>
+        </tr>
+        <tr>
+          <td>MULTI-DIAL RATIO NEEDED:</td>
+          <td id="multiDialRatio" class="val-amber">1.56 DIALS / PERSON</td>
+        </tr>
+        <tr>
+          <td>PHONE SQL CONTRIBUTION SHARE:</td>
+          <td id="phoneShareVal" class="val-cyan">80.0%</td>
+        </tr>
+        <tr>
+          <td>TOTAL PROJECTED PIPELINE (CALLS + DIGITAL):</td>
+          <td id="totalProjected" class="val-green" style="font-size: 1.25rem;">19.2 SQLS</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROW 3: ATTAINMENT AND PACE CALCULATOR -->
+  <div class="panel green-panel">
+    <h2>// 4. ATTAINMENT AND PACE CALCULATOR</h2>
+
+    <div class="grid-2" style="margin-bottom: 14px;">
+      <div class="control-row">
+        <div class="control-header">
+          <span class="control-label">CURRENT SQLS BOOKED (ALL CHANNELS):</span>
+          <span class="badge" id="currentSqlsVal">0 SQLS</span>
+        </div>
+        <input type="range" id="currentSqls" min="0" max="25" step="1" value="0">
+      </div>
+
+      <div class="control-row">
+        <div class="control-header">
+          <span class="control-label">WORKING DAYS REMAINING:</span>
+          <span class="badge" id="daysLeftVal">65 DAYS</span>
+        </div>
+        <input type="range" id="daysLeft" min="1" max="65" step="1" value="65">
+      </div>
+    </div>
+
+    <div class="attainment-grid">
+      <!-- 100% TARGET -->
+      <div class="target-box">
+        <div class="target-title">&gt; 100% TARGET (12 SQLS TOTAL)</div>
+        <div class="stat-hero" id="stat100Title">9.6 CALLS LEFT</div>
+        <div class="subtext" id="stat100Sub">DIGITAL COVERS ~2.4 SQLS</div>
+        <table class="retro-table">
+          <tr>
+            <td>REQUIRED DIALS / DAY:</td>
+            <td id="reqDials100">29.5</td>
+          </tr>
+          <tr>
+            <td>REQUIRED CONNECTS / DAY:</td>
+            <td id="reqConnects100">3.0</td>
+          </tr>
+          <tr>
+            <td>CALLING TIME REQUIRED:</td>
+            <td id="reqTime100">56 MIN / DAY</td>
+          </tr>
+          <tr>
+            <td>SYSTEM STATUS:</td>
+            <td id="paceStatus100"><span class="status-badge status-green">OPTIMAL</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 150% TARGET -->
+      <div class="target-box" style="border-color: var(--neon-pink);">
+        <div class="target-title" style="color: var(--neon-pink);">&gt; 150% STRETCH CAP (18 SQLS TOTAL)</div>
+        <div class="stat-hero" id="stat150Title">14.4 CALLS LEFT</div>
+        <div class="subtext" id="stat150Sub">DIGITAL COVERS ~3.6 SQLS</div>
+        <table class="retro-table">
+          <tr>
+            <td>REQUIRED DIALS / DAY:</td>
+            <td id="reqDials150">44.3</td>
+          </tr>
+          <tr>
+            <td>REQUIRED CONNECTS / DAY:</td>
+            <td id="reqConnects150">4.4</td>
+          </tr>
+          <tr>
+            <td>CALLING TIME REQUIRED:</td>
+            <td id="reqTime150">84 MIN / DAY</td>
+          </tr>
+          <tr>
+            <td>SYSTEM STATUS:</td>
+            <td id="paceStatus150"><span class="status-badge status-green">ON TRACK</span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: COMMISSION -->
+  <div class="panel amber-panel">
+    <h2>
+      <span>// 5. COMMISSION</span>
+      <span style="font-size: 0.85rem; color: var(--neon-amber);">GROSS OTC CONVERSION</span>
+    </h2>
+
+    <div class="grid-2">
+      <div>
+        <div class="control-header">
+          <span class="control-label">COMMISSION TERM BASIS:</span>
+        </div>
+        <div class="toggle-bar">
+          <button class="toggle-btn active" id="btnQuarterly" onclick="setCommTerm('quarterly')">QUARTERLY OTC</button>
+          <button class="toggle-btn" id="btnYearly" onclick="setCommTerm('yearly')">YEARLY OTC</button>
+        </div>
+
+        <div class="control-row">
+          <div class="control-header">
+            <span class="control-label" id="commInputLabel">QUARTERLY TARGET COMMISSION:</span>
+            <span class="badge" id="commAmountVal" style="color: var(--neon-amber); text-shadow: none;">€ 6,000</span>
+          </div>
+          <input type="range" id="commInput" min="1000" max="60000" step="500" value="6000">
+        </div>
+      </div>
+
+      <div>
+        <table class="retro-table">
+          <tr>
+            <td>QUARTERLY 100% TARGET QUOTA:</td>
+            <td>12.0 SQLS</td>
+          </tr>
+          <tr>
+            <td>QUARTERLY GROSS COMMISSION AT 100%:</td>
+            <td id="qCommDisplay" class="val-amber">€ 6,000</td>
+          </tr>
+          <tr>
+            <td>GROSS EARNING PER QUALIFIED SQL:</td>
+            <td id="perSqlGross" class="val-amber" style="font-size: 1.35rem;">€ 500.00</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TOUCHPOINT MONETIZATION TILES -->
+    <div class="commission-grid">
+      <div class="comm-metric-box">
+        <div class="label">GROSS VALUE / DIAL</div>
+        <div class="value" id="valPerDial">€ 2.50</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">PICKUP + NO-ANSWER</div>
+      </div>
+
+      <div class="comm-metric-box">
+        <div class="label">GROSS VALUE / CONNECT</div>
+        <div class="value" id="valPerConnect">€ 25.00</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">LIVE CONVERSATION</div>
+      </div>
+
+      <div class="comm-metric-box">
+        <div class="label">GROSS VALUE / EMAIL SENT</div>
+        <div class="value" id="valPerEmail">€ 0.30</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">FIRST + FOLLOW-UP MAILS</div>
+      </div>
+
+      <div class="comm-metric-box">
+        <div class="label">GROSS VALUE / LINKEDIN TOUCH</div>
+        <div class="value" id="valPerLi">€ 0.40</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">INVITES + DMS / INMAILS</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIMPLIFIED ABOUT / LOGIC MODAL -->
+<div class="modal-overlay" id="aboutModal" onclick="closeModalOnOverlay(event)">
+  <div class="modal-window">
+    <h3>
+      <span>// HOW THIS ENGINE WORKS</span>
+      <button class="modal-close-btn" onclick="closeModal()">[ ESC / CLOSE ]</button>
+    </h3>
+
+    <div class="feedback-banner">
+      💬 FOR FEEDBACK, QUESTIONS, OR IDEAS, SLACK <span>ERDEM ADIGÜZEL</span>.
+    </div>
+
+    <div class="simple-guide-item">
+      <h4>1. CADENCE & PIPELINE WORKLOAD</h4>
+      <p>SHOWS HOW MANY ACCOUNTS AND PROSPECTS ARE ACTIVE AT FULL RAMP ONCE YOUR 4-WEEK CADENCE IS RUNNING AT STEADY STATE, AUTOMATICALLY FACTORING IN MID-SEQUENCE DROP-OUTS.</p>
+    </div>
+
+    <div class="simple-guide-item">
+      <h4>2. DIALS & MULTI-DIALING</h4>
+      <p>CALCULATES YOUR DAILY CALL CAPACITY BASED ON YOUR CALL BLOCKS. PICKUPS TAKE ~10 MINUTES, UNANSWERED CALLS TAKE ~1 MINUTE. BECAUSE YOU HAVE MORE CALL TIME THAN SCHEDULED CONTACTS, MULTI-DIALING (CALLING DESK + MOBILE OR DOUBLE-TAPPING) LETS YOU HIT YOUR DAILY VOLUME COMFORTABLY.</p>
+    </div>
+
+    <div class="simple-guide-item">
+      <h4>3. ATTAINMENT & PACING</h4>
+      <p>SLIDE WHERE YOU ARE CURRENTLY AT (SQLS BOOKED) AND HOW MANY DAYS ARE LEFT IN THE QUARTER. IT IMMEDIATELY TELLS YOU HOW MANY DIALS AND CALLING MINUTES PER DAY YOU NEED TO HIT BOTH YOUR 100% QUOTA AND 150% STRETCH TARGET.</p>
+    </div>
+
+    <div class="simple-guide-item">
+      <h4>4. COMMISSION MONETIZATION</h4>
+      <p>BREAKS DOWN YOUR TARGET VARIABLE COMPENSATION SO YOU CAN SEE THE DIRECT GROSS CASH VALUE OF EVERY SINGLE ACTION YOU TAKE—PER RAW DIAL, PER LIVE CONVERSATION, PER EMAIL, AND PER LINKEDIN TOUCH.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Modal Functions
+  function openModal() {
+    document.getElementById('aboutModal').classList.add('active');
+  }
+  function closeModal() {
+    document.getElementById('aboutModal').classList.remove('active');
+  }
+  function closeModalOnOverlay(e) {
+    if (e.target.id === 'aboutModal') {
+      closeModal();
+    }
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // DOM References - Cadence
+  const accPerWeek = document.getElementById('accPerWeek');
+  const prosPerAcc = document.getElementById('prosPerAcc');
+  const cadenceWeeks = document.getElementById('cadenceWeeks');
+  const dropOutRate = document.getElementById('dropOutRate');
+  const callTouches = document.getElementById('callTouches');
+  const emailTouches = document.getElementById('emailTouches');
+  const liTouches = document.getElementById('liTouches');
+
+  // DOM References - Conversion Rates
+  const callMins = document.getElementById('callMins');
+  const avgConnectTime = document.getElementById('avgConnectTime');
+  const avgNoConnectTime = document.getElementById('avgNoConnectTime');
+  const connectRate = document.getElementById('connectRate');
+  const convRate = document.getElementById('convRate');
+  const emailPct = document.getElementById('emailPct');
+  const liPct = document.getElementById('liPct');
+
+  // DOM References - Attainment & Commission
+  const currentSqls = document.getElementById('currentSqls');
+  const daysLeft = document.getElementById('daysLeft');
+  const commInput = document.getElementById('commInput');
+
+  let commTerm = 'quarterly';
+
+  function setCommTerm(term) {
+    commTerm = term;
+    const btnQ = document.getElementById('btnQuarterly');
+    const btnY = document.getElementById('btnYearly');
+    const label = document.getElementById('commInputLabel');
+
+    if (term === 'yearly') {
+      btnY.classList.add('active');
+      btnQ.classList.remove('active');
+      label.innerText = 'YEARLY TARGET COMMISSION (OTC):';
+      commInput.min = "4000";
+      commInput.max = "240000";
+      commInput.step = "1000";
+      commInput.value = (parseFloat(commInput.value) * 4).toString();
+    } else {
+      btnQ.classList.add('active');
+      btnY.classList.remove('active');
+      label.innerText = 'QUARTERLY TARGET COMMISSION (OTC):';
+      commInput.min = "1000";
+      commInput.max = "60000";
+      commInput.step = "500";
+      commInput.value = (parseFloat(commInput.value) / 4).toString();
+    }
+    update();
+  }
+
+  function update() {
+    // 1. Read Inputs
+    const nAcc = parseInt(accPerWeek.value);
+    const nPros = parseInt(prosPerAcc.value);
+    const cWeeks = parseInt(cadenceWeeks.value);
+    const dRate = parseFloat(dropOutRate.value) / 100;
+    const tCalls = parseInt(callTouches.value);
+    const tEmails = parseInt(emailTouches.value);
+    const tLi = parseInt(liTouches.value);
+
+    const cMins = parseFloat(callMins.value);
+    const tConn = parseFloat(avgConnectTime.value);
+    const tNoConn = parseFloat(avgNoConnectTime.value);
+    const cRate = parseFloat(connectRate.value) / 100;
+    const sRate = parseFloat(convRate.value) / 100;
+    const ePct = parseFloat(emailPct.value) / 100;
+    const lPct = parseFloat(liPct.value) / 100;
+
+    const curSql = parseInt(currentSqls.value);
+    const remDays = parseInt(daysLeft.value);
+    const commRaw = parseFloat(commInput.value);
+
+    // Update Input Badges
+    document.getElementById('accPerWeekVal').innerText = nAcc;
+    document.getElementById('prosPerAccVal').innerText = nPros;
+    document.getElementById('cadenceWeeksVal').innerText = cWeeks + " WKS";
+    document.getElementById('dropOutRateVal').innerText = (dRate * 100).toFixed(1) + "%";
+    document.getElementById('callTouchesVal').innerText = tCalls;
+    document.getElementById('emailTouchesVal').innerText = tEmails;
+    document.getElementById('liTouchesVal').innerText = tLi;
+
+    document.getElementById('callMinsVal').innerText = cMins + " MIN";
+    document.getElementById('avgConnectTimeVal').innerText = tConn.toFixed(1) + " MIN";
+    document.getElementById('avgNoConnectTimeVal').innerText = tNoConn.toFixed(1) + " MIN";
+    document.getElementById('connectRateVal').innerText = (cRate * 100).toFixed(1) + "%";
+    document.getElementById('convRateVal').innerText = (sRate * 100).toFixed(1) + "%";
+    document.getElementById('emailPctVal').innerText = (ePct * 100).toFixed(1) + "%";
+    document.getElementById('liPctVal').innerText = (lPct * 100).toFixed(1) + "%";
+    document.getElementById('currentSqlsVal').innerText = curSql + " SQLS";
+    document.getElementById('daysLeftVal').innerText = remDays + " DAYS";
+    document.getElementById('commAmountVal').innerText = "€ " + Math.round(commRaw).toLocaleString();
+
+    // 2. Expected Workload Derivation
+    const weeklyNewContacts = nAcc * nPros;
+    const netTouchFactor = Math.max(0.01, 1 - (dRate / 2));
+
+    const activeAccCount = nAcc * cWeeks;
+    const activeProsCount = Math.round(activeAccCount * nPros * netTouchFactor);
+
+    const dailyScheduledCalls = (weeklyNewContacts * tCalls * netTouchFactor) / 5;
+    const dailyScheduledEmails = (weeklyNewContacts * tEmails * netTouchFactor) / 5;
+    const dailyScheduledLi = (weeklyNewContacts * tLi * netTouchFactor) / 5;
+
+    const blendedTime = (cRate * tConn) + ((1 - cRate) * tNoConn);
+    const dailyDialCapacity = cMins / blendedTime;
+    const dailyConnects = dailyDialCapacity * cRate;
+    const multiDialRatio = dailyScheduledCalls > 0 ? (dailyDialCapacity / dailyScheduledCalls) : 1;
+
+    const quarterDials = dailyDialCapacity * 65;
+    const quarterConnects = quarterDials * cRate;
+    const callSqlsProjected = quarterConnects * sRate;
+
+    const pPct = Math.max(0, 1 - (ePct + lPct));
+    document.getElementById('phoneShareVal').innerText = (pPct * 100).toFixed(1) + "%";
+
+    const totalProjected = pPct > 0 ? (callSqlsProjected / pPct) : callSqlsProjected;
+
+    // Render Workload Section Hero Stats & Table
+    document.getElementById('dailyCapacityHero').innerText = dailyDialCapacity.toFixed(1);
+    document.getElementById('dailyConnectsHero').innerText = dailyConnects.toFixed(1);
+
+    document.getElementById('activeAccounts').innerText = activeAccCount + " ACCOUNTS";
+    document.getElementById('activeProspects').innerText = activeProsCount + " PROSPECTS";
+    document.getElementById('weeklyContacts').innerText = weeklyNewContacts + " CONTACTS";
+    document.getElementById('dailyScheduledCalls').innerText = dailyScheduledCalls.toFixed(1) + " PEOPLE/DAY";
+    document.getElementById('dailyScheduledDigital').innerText = dailyScheduledEmails.toFixed(1) + " MAILS | " + dailyScheduledLi.toFixed(1) + " LI";
+    document.getElementById('multiDialRatio').innerText = multiDialRatio.toFixed(2) + " DIALS / PERSON";
+    document.getElementById('totalProjected').innerText = totalProjected.toFixed(1) + " SQLS";
+
+    // 3. Attainment Engine
+    const dialToSql = cRate * sRate;
+
+    function calcPace(targetTotal) {
+      const remainingTotal = Math.max(0, targetTotal - curSql);
+      if (remainingTotal === 0) {
+        return { achieved: true, callNeeded: 0, dialsPerDay: 0, connectsPerDay: 0, minsPerDay: 0, status: 'GOAL MET', statusClass: 'status-green' };
+      }
+      const callNeeded = remainingTotal * pPct;
+      const totalDialsNeeded = dialToSql > 0 ? (callNeeded / dialToSql) : 0;
+      const dialsPerDay = totalDialsNeeded / remDays;
+      const connectsPerDay = dialsPerDay * cRate;
+      const minsPerDay = dialsPerDay * blendedTime;
+
+      let status = 'ON TRACK';
+      let statusClass = 'status-green';
+      if (minsPerDay > cMins * 1.15) {
+        status = 'OVERDRIVE';
+        statusClass = 'status-yellow';
+      }
+      if (minsPerDay > cMins * 1.4) {
+        status = 'HIGH DEFICIT';
+        statusClass = 'status-red';
+      }
+      if (minsPerDay < cMins * 0.85) {
+        status = 'OPTIMAL';
+        statusClass = 'status-green';
+      }
+
+      return {
+        achieved: false,
+        remainingTotal,
+        callNeeded,
+        dialsPerDay,
+        connectsPerDay,
+        minsPerDay,
+        status,
+        statusClass
+      };
+    }
+
+    const pace100 = calcPace(12);
+    const pace150 = calcPace(18);
+
+    if (pace100.achieved) {
+      document.getElementById('stat100Title').innerHTML = '<span style="color:var(--neon-green)">100% UNLOCKED</span>';
+      document.getElementById('stat100Sub').innerText = 'TARGET REACHED';
+      document.getElementById('reqDials100').innerText = '0';
+      document.getElementById('reqConnects100').innerText = '0';
+      document.getElementById('reqTime100').innerText = '0 MIN / DAY';
+      document.getElementById('paceStatus100').innerHTML = '<span class="status-badge status-green">GOAL MET</span>';
+    } else {
+      document.getElementById('stat100Title').innerText = pace100.callNeeded.toFixed(1) + " CALLS LEFT";
+      document.getElementById('stat100Sub').innerText = "DIGITAL COVERS ~" + (pace100.remainingTotal - pace100.callNeeded).toFixed(1) + " SQLS";
+      document.getElementById('reqDials100').innerText = pace100.dialsPerDay.toFixed(1);
+      document.getElementById('reqConnects100').innerText = pace100.connectsPerDay.toFixed(1);
+      document.getElementById('reqTime100').innerText = Math.round(pace100.minsPerDay) + " MIN / DAY";
+      document.getElementById('paceStatus100').innerHTML = `<span class="status-badge ${pace100.statusClass}">${pace100.status}</span>`;
+    }
+
+    if (pace150.achieved) {
+      document.getElementById('stat150Title').innerHTML = '<span style="color:var(--neon-green)">150% UNLOCKED</span>';
+      document.getElementById('stat150Sub').innerText = 'STRETCH CAP REACHED';
+      document.getElementById('reqDials150').innerText = '0';
+      document.getElementById('reqConnects150').innerText = '0';
+      document.getElementById('reqTime150').innerText = '0 MIN / DAY';
+      document.getElementById('paceStatus150').innerHTML = '<span class="status-badge status-green">GOAL MET</span>';
+    } else {
+      document.getElementById('stat150Title').innerText = pace150.callNeeded.toFixed(1) + " CALLS LEFT";
+      document.getElementById('stat150Sub').innerText = "DIGITAL COVERS ~" + (pace150.remainingTotal - pace150.callNeeded).toFixed(1) + " SQLS";
+      document.getElementById('reqDials150').innerText = pace150.dialsPerDay.toFixed(1);
+      document.getElementById('reqConnects150').innerText = pace150.connectsPerDay.toFixed(1);
+      document.getElementById('reqTime150').innerText = Math.round(pace150.minsPerDay) + " MIN / DAY";
+      document.getElementById('paceStatus150').innerHTML = `<span class="status-badge ${pace150.statusClass}">${pace150.status}</span>`;
+    }
+
+    // 4. Commission Monetization Matrix
+    const qComm = commTerm === 'yearly' ? (commRaw / 4) : commRaw;
+    document.getElementById('qCommDisplay').innerText = "€ " + Math.round(qComm).toLocaleString();
+
+    const valPerSql = qComm / 12;
+    document.getElementById('perSqlGross').innerText = "€ " + valPerSql.toFixed(2);
+
+    const valPerConnect = sRate * valPerSql;
+    const valPerDial = cRate * valPerConnect;
+
+    const quarterlyEmails = dailyScheduledEmails * 65;
+    const quarterlyLiTouches = dailyScheduledLi * 65;
+
+    const qEmailCommissionPool = (12 * ePct) * valPerSql;
+    const qLiCommissionPool = (12 * lPct) * valPerSql;
+
+    const valPerEmail = quarterlyEmails > 0 ? (qEmailCommissionPool / quarterlyEmails) : 0;
+    const valPerLi = quarterlyLiTouches > 0 ? (qLiCommissionPool / quarterlyLiTouches) : 0;
+
+    document.getElementById('valPerDial').innerText = "€ " + valPerDial.toFixed(2);
+    document.getElementById('valPerConnect').innerText = "€ " + valPerConnect.toFixed(2);
+    document.getElementById('valPerEmail').innerText = "€ " + valPerEmail.toFixed(2);
+    document.getElementById('valPerLi').innerText = "€ " + valPerLi.toFixed(2);
+  }
+
+  // Bind Listeners
+  [
+    accPerWeek, prosPerAcc, cadenceWeeks, dropOutRate, callTouches, emailTouches, liTouches,
+    callMins, avgConnectTime, avgNoConnectTime, connectRate, convRate, emailPct, liPct,
+    currentSqls, daysLeft, commInput
+  ].forEach(el => {
+    el.addEventListener('input', update);
+  });
+
+  // Initial Run
+  update();
+</script>
+
+</body>
+</html>
