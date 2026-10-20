@@ -34,10 +34,10 @@
       --glow-boosted-cyan: 0 0 6px rgba(0, 240, 255, 0.65), 0 0 14px rgba(0, 240, 255, 0.35);
       --glow-boosted-amber: 0 0 6px rgba(255, 183, 3, 0.65), 0 0 14px rgba(255, 183, 3, 0.35);
 
-      /* Category Subheads (-20% Glow) */
+      /* Category Subheads */
       --glow-subhead-cyan: 0 0 5px rgba(0, 240, 255, 0.52), 0 0 11px rgba(0, 240, 255, 0.28);
 
-      /* Hero Numbers (-10% Glow) */
+      /* Hero Numbers */
       --glow-hero-cyan: 0 0 7px rgba(0, 240, 255, 0.63), 0 0 16px rgba(0, 240, 255, 0.36);
       --glow-hero-green: 0 0 7px rgba(57, 255, 20, 0.63), 0 0 16px rgba(57, 255, 20, 0.36);
     }
@@ -127,27 +127,55 @@
       font-weight: 700;
     }
 
-    /* About Button */
-    .about-btn {
+    /* Stacked Header Action Buttons */
+    .header-btns {
       position: absolute;
-      top: 22px;
-      right: 22px;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 145px;
+    }
+
+    .hdr-btn {
       background: transparent;
       border: 1px solid var(--neon-cyan);
       color: var(--neon-cyan);
       font-family: 'Orbitron', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 9px 18px;
+      padding: 7px 10px;
       border-radius: 4px;
       cursor: pointer;
       letter-spacing: 1px;
       transition: all 0.2s ease;
+      text-align: center;
     }
 
-    .about-btn:hover {
+    .hdr-btn:hover {
       background: rgba(0, 240, 255, 0.15);
       box-shadow: var(--glow-cyan-box);
+    }
+
+    .hdr-btn-reset {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+
+    .hdr-btn-reset:hover {
+      background: rgba(255, 0, 127, 0.15);
+      box-shadow: var(--glow-pink-box);
+    }
+
+    @media (max-width: 820px) {
+      .header-btns {
+        position: static;
+        margin: 16px auto 0 auto;
+        flex-direction: row;
+        width: auto;
+        justify-content: center;
+      }
     }
 
     /* Grid Layouts */
@@ -180,7 +208,6 @@
       box-shadow: 0 0 14px rgba(255, 183, 3, 0.35);
     }
 
-    /* Section Headings */
     h2 {
       font-family: 'Orbitron', sans-serif;
       font-size: 1.05rem;
@@ -196,7 +223,6 @@
       align-items: center;
     }
 
-    /* Sub-Headers with -20% Glow */
     .category-subhead {
       margin-top: 12px;
       margin-bottom: 8px;
@@ -332,7 +358,6 @@
       text-shadow: var(--glow-boosted-amber);
     }
 
-    /* Numbers below hero labels (-10% Glow) */
     .hero-stat-value {
       font-family: 'Orbitron', sans-serif;
       font-size: 2.25rem;
@@ -496,6 +521,7 @@
       color: var(--neon-cyan);
       margin: 0 0 16px 0;
       font-size: 1.25rem;
+      text-shadow: var(--glow-boosted-cyan);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -543,6 +569,7 @@
       font-size: 0.95rem;
       color: var(--neon-amber);
       margin: 0 0 6px 0;
+      text-shadow: var(--glow-boosted-amber);
     }
 
     .simple-guide-item p {
@@ -558,7 +585,10 @@
 <div class="wrapper">
   <!-- HEADER -->
   <header>
-    <button class="about-btn" onclick="openModal()">ABOUT / LOGIC</button>
+    <div class="header-btns">
+      <button class="hdr-btn" onclick="openModal()">ABOUT / LOGIC</button>
+      <button class="hdr-btn hdr-btn-reset" onclick="resetToDefaults()">RESET DEFAULTS</button>
+    </div>
     <h1>&#x26A1; OUTBOUND SIMULATOR 3000 &#x26A1;</h1>
     <div class="creator-tag">BY <span class="creator-name">ERDEM ADIGÜZEL</span></div>
   </header>
@@ -710,7 +740,7 @@
   <div class="panel">
     <h2>// 3. EXPECTED WORKLOAD</h2>
 
-    <!-- PROMINENT HERO METRICS (Numbers tuned with -10% Glow) -->
+    <!-- PROMINENT HERO METRICS -->
     <div class="hero-metrics-grid">
       <div class="hero-stat-card">
         <div class="hero-stat-label">DAILY DIAL CAPACITY (FROM CALL TIME)</div>
@@ -966,7 +996,7 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  // DOM References - Cadence
+  // DOM References
   const accPerWeek = document.getElementById('accPerWeek');
   const prosPerAcc = document.getElementById('prosPerAcc');
   const cadenceWeeks = document.getElementById('cadenceWeeks');
@@ -975,7 +1005,6 @@
   const emailTouches = document.getElementById('emailTouches');
   const liTouches = document.getElementById('liTouches');
 
-  // DOM References - Conversion Rates
   const callMins = document.getElementById('callMins');
   const avgConnectTime = document.getElementById('avgConnectTime');
   const avgNoConnectTime = document.getElementById('avgNoConnectTime');
@@ -984,14 +1013,78 @@
   const emailPct = document.getElementById('emailPct');
   const liPct = document.getElementById('liPct');
 
-  // DOM References - Attainment & Commission
   const currentSqls = document.getElementById('currentSqls');
   const daysLeft = document.getElementById('daysLeft');
   const commInput = document.getElementById('commInput');
 
   let commTerm = 'quarterly';
 
-  function setCommTerm(term) {
+  const allControls = [
+    accPerWeek, prosPerAcc, cadenceWeeks, dropOutRate, callTouches, emailTouches, liTouches,
+    callMins, avgConnectTime, avgNoConnectTime, connectRate, convRate, emailPct, liPct,
+    currentSqls, daysLeft, commInput
+  ];
+
+  const defaultValues = {
+    accPerWeek: "10",
+    prosPerAcc: "4",
+    cadenceWeeks: "4",
+    dropOutRate: "10",
+    callTouches: "4",
+    emailTouches: "4",
+    liTouches: "3",
+    callMins: "90",
+    avgConnectTime: "10.0",
+    avgNoConnectTime: "1.0",
+    connectRate: "10.0",
+    convRate: "5.0",
+    emailPct: "10.0",
+    liPct: "10.0",
+    currentSqls: "0",
+    daysLeft: "65",
+    commInput: "6000",
+    commTerm: "quarterly"
+  };
+
+  // Local Storage Save & Load
+  function saveSettings() {
+    const data = { commTerm };
+    allControls.forEach(ctrl => {
+      data[ctrl.id] = ctrl.value;
+    });
+    localStorage.setItem('outbound_simulator_3000_settings', JSON.stringify(data));
+  }
+
+  function loadSettings() {
+    const raw = localStorage.getItem('outbound_simulator_3000_settings');
+    if (!raw) return;
+    try {
+      const data = JSON.parse(raw);
+      if (data.commTerm && data.commTerm !== commTerm) {
+        setCommTerm(data.commTerm, false);
+      }
+      allControls.forEach(ctrl => {
+        if (data[ctrl.id] !== undefined) {
+          ctrl.value = data[ctrl.id];
+        }
+      });
+    } catch (e) {
+      console.warn("Could not load saved settings:", e);
+    }
+  }
+
+  function resetToDefaults() {
+    if (!confirm("RESET ALL SLIDERS AND ASSUMPTIONS TO DEFAULT VALUES?")) return;
+    localStorage.removeItem('outbound_simulator_3000_settings');
+    setCommTerm('quarterly', false);
+    Object.keys(defaultValues).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = defaultValues[id];
+    });
+    update();
+  }
+
+  function setCommTerm(term, triggerSave = true) {
     commTerm = term;
     const btnQ = document.getElementById('btnQuarterly');
     const btnY = document.getElementById('btnYearly');
@@ -1004,7 +1097,7 @@
       commInput.min = "4000";
       commInput.max = "240000";
       commInput.step = "1000";
-      commInput.value = (parseFloat(commInput.value) * 4).toString();
+      if (triggerSave) commInput.value = (parseFloat(commInput.value) * 4).toString();
     } else {
       btnQ.classList.add('active');
       btnY.classList.remove('active');
@@ -1012,7 +1105,7 @@
       commInput.min = "1000";
       commInput.max = "60000";
       commInput.step = "500";
-      commInput.value = (parseFloat(commInput.value) / 4).toString();
+      if (triggerSave) commInput.value = (parseFloat(commInput.value) / 4).toString();
     }
     update();
   }
@@ -1039,7 +1132,7 @@
     const remDays = parseInt(daysLeft.value);
     const commRaw = parseFloat(commInput.value);
 
-    // Update Input Badges
+    // Update Badges
     document.getElementById('accPerWeekVal').innerText = nAcc;
     document.getElementById('prosPerAccVal').innerText = nPros;
     document.getElementById('cadenceWeeksVal').innerText = cWeeks + " WKS";
@@ -1084,7 +1177,7 @@
 
     const totalProjected = pPct > 0 ? (callSqlsProjected / pPct) : callSqlsProjected;
 
-    // Render Workload Section Hero Stats & Table
+    // Render Workload Section
     document.getElementById('dailyCapacityHero').innerText = dailyDialCapacity.toFixed(1);
     document.getElementById('dailyConnectsHero').innerText = dailyConnects.toFixed(1);
 
@@ -1195,18 +1288,16 @@
     document.getElementById('valPerConnect').innerText = "€ " + valPerConnect.toFixed(2);
     document.getElementById('valPerEmail').innerText = "€ " + valPerEmail.toFixed(2);
     document.getElementById('valPerLi').innerText = "€ " + valPerLi.toFixed(2);
+
+    saveSettings();
   }
 
-  // Bind Listeners
-  [
-    accPerWeek, prosPerAcc, cadenceWeeks, dropOutRate, callTouches, emailTouches, liTouches,
-    callMins, avgConnectTime, avgNoConnectTime, connectRate, convRate, emailPct, liPct,
-    currentSqls, daysLeft, commInput
-  ].forEach(el => {
+  loadSettings();
+
+  allControls.forEach(el => {
     el.addEventListener('input', update);
   });
 
-  // Initial Run
   update();
 </script>
 
