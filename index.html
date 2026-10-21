@@ -93,29 +93,51 @@
       position: relative;
     }
 
-   /* Retro Neon Heartbeat Pulse */
-    @keyframes pulseTitle {
+   /* Gentle Arcade Neon Backlight Pulse */
+    @keyframes arcadeGlowPulse {
       0%, 100% {
-        text-shadow: 0 0 6px rgba(255, 0, 127, 0.4), 0 0 12px rgba(255, 0, 127, 0.2);
-        transform: scale(1);
-        filter: brightness(0.95);
+        filter: drop-shadow(0 0 6px rgba(255, 222, 0, 0.35)) drop-shadow(0 0 14px rgba(216, 0, 39, 0.25));
+        transform: skewX(-8deg) scale(1);
       }
       50% {
-        text-shadow: 0 0 22px rgba(255, 0, 127, 1), 0 0 40px rgba(255, 0, 127, 0.7), 0 0 60px rgba(255, 0, 127, 0.4);
-        transform: scale(1.03);
-        filter: brightness(1.2);
+        filter: drop-shadow(0 0 14px rgba(255, 222, 0, 0.75)) drop-shadow(0 0 28px rgba(216, 0, 39, 0.55));
+        transform: skewX(-8deg) scale(1.01);
       }
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 2rem;
       font-weight: 900;
-      color: var(--neon-pink);
-      margin: 0 0 6px 0;
-      letter-spacing: 2px;
-      animation: pulseTitle 0.9s steps(2, start) infinite;
+      font-style: italic;
+      font-size: 2.1rem;
+      letter-spacing: 3px;
+      color: #ffde00; /* Classic Arcade Yellow */
+      -webkit-text-stroke: 1.5px #001f66; /* Deep navy border */
       display: inline-block;
+      margin: 0 0 8px 0;
+      
+      /* Multi-layer 3D Red Extrusion + Blue Base Rim */
+      text-shadow:
+        /* Tight face border */
+        -1px -1px 0 #001f66,
+         1px -1px 0 #001f66,
+        -1px  1px 0 #001f66,
+         1px  1px 0 #001f66,
+        /* Solid 3D Red Block Extrusion */
+        0 1px 0 #d80027,
+        0 2px 0 #d80027,
+        0 3px 0 #d80027,
+        0 4px 0 #d80027,
+        0 5px 0 #d80027,
+        0 6px 0 #c20023,
+        0 7px 0 #ab001f,
+        0 8px 0 #94001b,
+        /* Bottom Dark Navy Shadow Shelf */
+        0 9px 0 #001f66,
+        0 10px 0 #001440,
+        0 12px 6px rgba(0, 0, 0, 0.75);
+
+      animation: arcadeGlowPulse 2.4s ease-in-out infinite;
     }
 
     /* Stacked Header Action Buttons */
